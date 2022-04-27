@@ -1,27 +1,21 @@
 import React from 'react';
-import Color from './components/Color';
-import InputData from './components/InputData';
-import timeZones from './config/time-zones';
-import colors from './config/colors';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {  ROUTES } from './config/routes-config';
+import Navigator from './components/navigators/Navigator';
 
+const App: React.FC = () => {
+return <BrowserRouter>
+<Navigator items={ROUTES} />
 
-import Timer from './components/Timer';
-import InputColor from './components/InputColor';
-type ComponentNames = "input" | "timer" | "color"
-function App() {
-const [timeZone, setTimeZone] = React.useState("Asia/Jerusalem");
-const [color, setColor] = React.useState("red");
-const [componentName, setComponentName] = React.useState<ComponentNames>('input');
-const mapComponents: Map<ComponentNames, React.ReactNode> = new Map();
-mapComponents.set("color", <Color color={color}></Color>);
-mapComponents.set("input", <><InputData timeZones={timeZones} injectTimeZone={setTimeZone}></InputData>
-<InputColor colors={colors} injectColors={setColor}></InputColor></>);
-mapComponents.set("timer", <Timer timeZone={timeZone}></Timer>)
+<Routes>
+  {getRoutes()}
+</Routes>
+</BrowserRouter> 
 
-  return  <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
-    {Array.from(mapComponents.keys()).map(k => <button onClick={() => setComponentName(k)}>{k}</button>)}
-    {mapComponents.get(componentName)}
-    </div>
+ 
 }
 
 export default App;
+function getRoutes(): React.ReactNode {
+  return ROUTES.map(r => <Route key={r.path} path={r.path} element={r.element}/>)
+}
