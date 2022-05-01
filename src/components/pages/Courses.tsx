@@ -1,13 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { coursesService } from "../../config/service-config";
-import CoursesServiceArray from "../../service/CoursesServiceArray";
-import { courses } from "../../config/service-config";
+import { Course } from "../../models/Course";
+import { StateType } from "../../redux/store";
 const Courses: React.FC = () =>
-{ 
-    return <label style={{fontSize: 20}}>
-        <ul>
-            {coursesService.get().map(c=><li>{JSON.stringify(c)}</li>)}
-        </ul>
-    </label>
+{
+    const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
+    return <ul>
+        {courses.map(c => <li key={c.id}>{JSON.stringify(c)}</li>)}
+    </ul>
 }
 export default Courses;

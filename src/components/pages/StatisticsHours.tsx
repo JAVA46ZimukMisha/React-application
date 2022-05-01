@@ -1,22 +1,17 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { coursesService } from "../../config/service-config";
-import _ from 'lodash';
+import { Course } from "../../models/Course";
+import { StateType } from "../../redux/store";
+import { getMinMaxAvgByField } from "../../util/functions";
 const StatisticHours: React.FC = () =>
 {
-    const hours = coursesService.get().map(c=>c.hours);
-    const maxHours = _.max(hours);
-    const minHours = _.min(hours);
-    const aveHours = _.mean(hours);
-    return <>
-    <label style={{fontSize: 40}}>
-        Maximal Hours = {maxHours}
-    </label><br/>
-    <label style={{fontSize: 40}}>
-        Minimal Hours = {minHours}
-    </label><br/>
-    <label style={{fontSize: 40}}>
-        Average Hours = {aveHours}
-    </label>
-    </>
+    const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
+    const statObj = getMinMaxAvgByField(courses, 'hours');
+    return <div style={{fontSize: "1.5em", display: 'flex', justifyContent: 'space-evenly'}}>
+        <label>min hours = {statObj.min}</label>
+        <label>max hours = {statObj.max}</label>
+        <label>avg hours = {statObj.avg}</label>
+    </div>
 }
 export default StatisticHours;

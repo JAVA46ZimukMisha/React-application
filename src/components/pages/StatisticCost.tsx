@@ -1,22 +1,16 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { coursesService } from "../../config/service-config";
-import _ from 'lodash';
-const StatisticCost: React.FC = () =>
-{
-    const cost = coursesService.get().map(c=>c.cost);
-    const maxCost = _.max(cost);
-    const minCost = _.min(cost);
-    const aveCost = _.mean(cost);
-    return <>
-    <label style={{fontSize: 40}}>
-        Maximal Cost = {maxCost}
-    </label><br/>
-    <label style={{fontSize: 40}}>
-        Minimal Cost = {minCost}
-    </label><br/>
-    <label style={{fontSize: 40}}>
-        Average Cost = {aveCost}
-    </label>
-    </>
+import { Course } from "../../models/Course";
+import { StateType } from "../../redux/store";
+import { getMinMaxAvgByField } from "../../util/functions";
+const StatisticCost: React.FC = () => {
+    const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
+    const statObj = getMinMaxAvgByField(courses, 'cost');
+    return <div>{statObj.min == 0 ? <label style={{fontSize: "2em"}}>No Data</label> : <div style={{ fontSize: "1.5em", display: 'flex', justifyContent: 'space-evenly' }}>
+        <label>min cost = {statObj.min}</label>
+        <label>max cost = {statObj.max}</label>
+        <label>avg cost = {statObj.avg}</label>
+    </div>}</div>
 }
 export default StatisticCost;

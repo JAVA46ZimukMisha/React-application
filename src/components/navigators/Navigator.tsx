@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { RouteType } from "../../models/RouteType";
 const Navigator: React.FC<{items:RouteType[]}> = ({items}) => {
     function getLinks(): React.ReactNode {
@@ -7,6 +7,9 @@ const Navigator: React.FC<{items:RouteType[]}> = ({items}) => {
     }
     return <nav style={{display: 'flex', justifyContent: 'space-evenly', fontSize: '1.5em'}}>
         {getLinks()}
+        
     </nav>
+    
+    
 }
 export default Navigator;

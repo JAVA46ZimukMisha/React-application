@@ -1,12 +1,12 @@
 import React from "react";
 import { coursesService } from "../../config/service-config";
+import courseData from '../../config/courseData.json'
 import { getRandomCourse } from "../../util/randomCourse";
-import courseData from "../../config/courseData.json"
+import { useDispatch } from "react-redux";
+import { addCourse } from "../../redux/actions";
 const AddCourse: React.FC = () =>
-{   
-    const evenClick = ()=>{coursesService.add(getRandomCourse(courseData))}
-    return <label style={{fontSize: 40}}>
-        <button onClick={evenClick}>Add Course</button>
-    </label>
+{
+   const dispatch = useDispatch();
+    return <button onClick={() => dispatch(addCourse(getRandomCourse(courseData)))}>Add Random Course</button>
 }
 export default AddCourse;
