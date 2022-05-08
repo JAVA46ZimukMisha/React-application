@@ -17,9 +17,9 @@ const Generation: React.FC = () =>
     useEffect(() => {
         inputElement = document.getElementById(INPUT_GENERATION_ID);
     }, [])
-    return <div>
+    return <><h1>Generation</h1><div>
         <input id={INPUT_GENERATION_ID} type="number"/>
         <button onClick={onInput}>generate</button>
-    </div>
+    </div></>
 }
 export default Generation;

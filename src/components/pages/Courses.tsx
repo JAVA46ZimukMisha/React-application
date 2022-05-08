@@ -6,8 +6,8 @@ import { StateType } from "../../redux/store";
 const Courses: React.FC = () =>
 {
     const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
-    return <ul>
+    return <><h1>Courses</h1><ul>
         {courses.map(c => <li key={c.id}>{JSON.stringify(c)}</li>)}
-    </ul>
+    </ul></>
 }
 export default Courses;
