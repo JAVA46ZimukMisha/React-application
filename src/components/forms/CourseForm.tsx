@@ -55,9 +55,7 @@ function handlerDate(event: any) {
                 md: 20
             }
         }} xs={8}>
-        <Grid container rowSpacing={{
-            xs: 2
-        }} columnSpacing={3}>
+        <Grid container rowSpacing={2} columnSpacing={3}>
             <Grid item xs={12} sm={6}>
                 <FormControl fullWidth required>
                     <InputLabel id="course-select-label">Course Name</InputLabel>
