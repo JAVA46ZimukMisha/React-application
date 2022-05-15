@@ -7,10 +7,10 @@ import { getMinMaxAvgByField } from "../../util/functions";
 const StatisticCost: React.FC = () => {
     const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
     const statObj = getMinMaxAvgByField(courses, 'cost');
-    return <><h1>Statistics Cost</h1><div>{statObj.min == 0 ? <label style={{fontSize: "2em"}}>No Data</label> : <div style={{ fontSize: "1.5em", display: 'flex', justifyContent: 'space-evenly' }}>
+    return <div>{statObj.min == 0 ? <label style={{fontSize: "2em"}}>No Data</label> : <div style={{ fontSize: "1.5em", display: 'flex', justifyContent: 'space-evenly' }}>
         <label>min cost = {statObj.min}</label>
         <label>max cost = {statObj.max}</label>
         <label>avg cost = {statObj.avg}</label>
-    </div>}</div></>
+    </div>}</div>
 }
 export default StatisticCost;

@@ -2,76 +2,99 @@ import React from "react";
 import { Course, createCourse } from "../../models/Course";
 import courseData from "../../config/courseData.json";
 import { Grid, Select, TextField, FormControl, InputLabel, MenuItem, Button } from "@mui/material";
-import { getRandomNumber } from "../../util/random";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { title } from "process";
+import { display } from "@mui/system";
 type Props = {
     submitFn: (course: Course) => void;
+    courseUpdate? : Course
 }
-const initialCourse: Course = createCourse(0, "",
-"",0, 0, null);
-const CourseForm: React.FC<Props> = ({ submitFn }) => {
-    const {courses, lectors, minCost, maxCost, minHours, maxHours} = courseData;
-    const [course, setCourse] = React.useState(initialCourse);
+const initialCourse = createCourse(0, "", "", 0, 0, new Date());
+const CourseForm: React.FC<Props> = ({ submitFn, courseUpdate}) => {
+    const { courses, minHours, maxHours, lectors, minCost, maxCost, minYear, maxYear } = courseData;
+    const [course, setCourse] = React.useState(courseUpdate || initialCourse);
 
-function onSubmit(event: any) {
-    event.preventDefault();
-    console.log(course)
-     submitFn(course);
-}
-function handlerCourse(event: any) {
-   const courseCopy = {...course};
-   courseCopy.name = event.target.value;
-   console.log(courseCopy.name)
-   setCourse(courseCopy);
-}
-function handlerLecturer(event: any) {
-    const courseCopy = {...course};
-    courseCopy.lecturer = event.target.value;
-    console.log(courseCopy.name)
-    setCourse(courseCopy);
- }
-function handlerHours(event: any) {
-    const courseCopy = {...course};
-    courseCopy.hours = +event.target.value;
-    setCourse(courseCopy);
-}
-function handlerCost(event: any) {
-    const courseCopy = {...course};
-    courseCopy.cost = +event.target.value;
-    setCourse(courseCopy);
-}
-function handlerDate(event: any) {
-    const courseCopy = {...course};
-    courseCopy.openingDate = event.target.value;
-    setCourse(courseCopy);
-}
-    return <form onSubmit={onSubmit}>
-        <Grid container sx={{
-            marginLeft: {
-                xs: 8,
-                sm: 14,
-                md: 20
-            }
-        }} xs={8}>
-        <Grid container rowSpacing={2} columnSpacing={3}>
-            <Grid item xs={12} sm={6}>
-                <FormControl fullWidth required>
-                    <InputLabel id="course-select-label">Course Name</InputLabel>
-                    <Select
-                        labelId="course-select-label"
-                        id="demo-simple-select"
-                        label="Course Name"
-                        value={course.name}
-                        onChange={handlerCourse}
-                    >
-                        <MenuItem value="">None</MenuItem>
-                       {getCourseItems(courses)}
-                    </Select>
-                </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+    function onSubmit(event: any) {
+        event.preventDefault();
+        console.log(course)
+        submitFn(course);
+        document.querySelector('form')!.reset();
+    }
+    function handlerCourse(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.name = event.target.value;
+        console.log(courseCopy.name)
+        setCourse(courseCopy);
+    }
+    function handlerLecturer(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.lecturer = event.target.value;
+        setCourse(courseCopy);
+    }
+    function handlerHours(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.hours = +event.target.value;
+        setCourse(courseCopy);
+    }
+    function handlerCost(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.cost = +event.target.value;
+        setCourse(courseCopy);
+    }
+    function handlerOpeningDate(event: any) {
+        const courseCopy = { ...course };
+        courseCopy.openingDate = new Date(event.target.value);
+        setCourse(courseCopy);
+    }
+    function onReset() {
+        setCourse(initialCourse)
+    }
+    function courseNameDisall(){
+        if (courseUpdate) {
+            return <Grid item xs={10} sm={5} >
+            <FormControl fullWidth required>
+                <InputLabel id="course-select-label">Course Name</InputLabel>
+                <Select
+                    labelId="course-select-label"
+                    id="demo-simple-select"
+                    label="Course Name"
+                    value={course.name}
+                    onChange={handlerCourse}
+                >
+                    <MenuItem value={course.name}>{course.name}</MenuItem>
+                </Select>
+            </FormControl>
+        </Grid>
+        }
+        else {return <Grid item xs={10} sm={5} >
+        <FormControl fullWidth required>
+            <InputLabel id="course-select-label">Course Name</InputLabel>
+            <Select
+                labelId="course-select-label"
+                id="demo-simple-select"
+                label="Course Name"
+                value={course.name}
+                onChange={handlerCourse}
+            >
+                <MenuItem value="">None</MenuItem>
+                {getCourseItems(courses)}
+            </Select>
+        </FormControl>
+    </Grid>}
+    }
+    function valueHour(){
+        return courseUpdate ? course.hours : null
+    }
+    function valueCost(){
+        return courseUpdate ? course.cost : null
+    }
+    function tittle () {
+        return courseUpdate ? `Updating course with id ${course.id}` : "";
+    }
+    return <><h4 style={{display: "flex", justifyContent: "center", color: "#1976d2" }}>{tittle()}</h4>
+    <form onSubmit={onSubmit} onReset={onReset}>
+        <Grid container spacing={{ xs: 5, sm: 2, md: 13 }} justifyContent="center">
+            {courseNameDisall()}
+            <Grid item xs={10} sm={5} >
                 <FormControl fullWidth required>
                     <InputLabel id="course-select-label">Lecturer</InputLabel>
                     <Select
@@ -82,74 +105,60 @@ function handlerDate(event: any) {
                         onChange={handlerLecturer}
                     >
                         <MenuItem value="">None</MenuItem>
-                       {getCourseItems(lectors)}
+                        {getCourseItems(lectors)}
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
-                <TextField type="number" label="Hours" fullWidth required value={course.hours || ""} 
-                onChange={handlerHours}
-                inputProps={{
-                  
-                    min: `${minHours}`,
-                    max: `${maxHours}`
-                  }}
-                  helperText="enter hours in range [80-500]"/>
+            <Grid item xs={10} sm={5}>
+                <TextField type="number" label="Hours" value={valueHour()} fullWidth required
+                    onChange={handlerHours} helperText={`enter number of hours in range [${minHours}-${maxHours} ]`}
+                    inputProps={{
+
+                        min: `${minHours}`,
+                        max: `${maxHours}`
+                    }} />
             </Grid>
-            <Grid item xs={12} sm={6}>
-                <TextField type="number" label="Cost" fullWidth required value={course.cost || ""} 
-                onChange={handlerCost}
-                inputProps={{
-                  
-                    min: `${minCost}`,
-                    max: `${maxCost}`
-                  }}
-                  helperText="enter cost in range [5000-30000]"/>
+            <Grid item xs={10} sm={5}>
+                <TextField type="number" label="Cost"  value={valueCost()} fullWidth required
+                    onChange={handlerCost} helperText={`enter cost in range [${minCost}-${maxCost} ]`}
+                    inputProps={{
+
+                        min: `${minCost}`,
+                        max: `${maxCost}`
+                    }} />
             </Grid>
-            <Grid item xs={12} sx={{
-                marginLeft: {
-                    xs: 2,
-                    sm: 15,
-                    md: 38
-                }
-            }}>
-            <LocalizationProvider dateAdapter={AdapterDateFns} xs={8} fullWidth required>
-                <DatePicker 
-                label="Opening date"
-                value={course.openingDate} 
-                onChange={(newValue) => {
-                    const courseCopy = {...course};
-                    courseCopy.openingDate = newValue;
-                    setCourse(courseCopy);
-                  }}
-                renderInput={(params) => <TextField {...params} />}
-                />
-            </LocalizationProvider>
+            <Grid item xs={10} sm={8} >
+                <TextField required label={'Opening Date'} type={'date'} fullWidth
+                    onChange={handlerOpeningDate} inputProps={
+                        {
+                            min: `${minYear}-01-01`,
+                            max: `${maxYear}-12-31`
+                        }
+                    } InputLabelProps={{
+                        shrink: true
+                    }} />
+
             </Grid>
-            <Grid item xs={4} md={2} sx={{
-                marginLeft: {
-                    xs: 5,
-                    sm: 15,
-                    md: 40
-                }
-            }}>
-                <Button type="submit">Submit</Button>
+            <Grid item xs={10} sm={8} md={6}>
+                <Grid container justifyContent={"center"}>
+                    <Grid item xs={5}>
+                        <Button type="submit">Submit</Button>
+                    </Grid>
+                    <Grid item xs={5}>
+                        <Button type="reset">Reset</Button>
+                    </Grid>
+
+                </Grid>
+
             </Grid>
-            <Grid item xs={4} md={2} sx={{
-                marginLeft: {
-                    xs: 1,
-                    sm: 0,
-                    md: 3
-                }
-            }}>
-                <Button type="reset">Reset</Button>
-            </Grid>
-            </Grid>
+
+
+
         </Grid>
-    </form>
+    </form></>
 }
 export default CourseForm;
 
-function getCourseItems(courses: string[]): React.ReactNode {
-    return courses.map(c => <MenuItem value={c} key={c}>{c}</MenuItem>)
+function getCourseItems(items: string[]): React.ReactNode {
+    return items.map(c => <MenuItem value={c} key={c}>{c}</MenuItem>)
 }

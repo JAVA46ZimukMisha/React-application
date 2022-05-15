@@ -28,3 +28,4 @@ export default App;
 function getRoutes(): React.ReactNode {
   return ROUTES.map(r => <Route key={r.path} path={r.path} element={r.element}/>)
 }
+

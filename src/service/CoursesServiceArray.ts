@@ -21,7 +21,9 @@ export default class CoursesServiceArray implements CoursesService {
     }
     update(id: number, course: Course): void {
         const index = this.getIndex(id);
-        course.id = id;
+        if (id !== course.id) {
+            throw `No match of id ${id} with course.id ${course.id}`;
+        }
         this.courses[index] = course;
     }
     get(): Course[] {

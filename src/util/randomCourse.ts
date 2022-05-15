@@ -1,3 +1,4 @@
+
 import { createCourse } from "../models/Course";
 import { getRandomDate, getRandomNumber, getRandomElement } from "./random";
 export function getRandomCourse(courseData: any) {
