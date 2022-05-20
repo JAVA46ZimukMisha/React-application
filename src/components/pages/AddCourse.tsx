@@ -3,7 +3,7 @@ import { coursesService } from "../../config/service-config";
 import courseData from '../../config/courseData.json'
 import { getRandomCourse } from "../../util/randomCourse";
 import { useDispatch } from "react-redux";
-import { addCourse, updateCourse } from "../../redux/actions";
+import { addCourse } from "../../redux/actions";
 import CourseForm from "../forms/CourseForm";
 import { Course } from "../../models/Course";
 const AddCourse: React.FC = () =>
