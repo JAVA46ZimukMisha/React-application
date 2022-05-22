@@ -18,7 +18,7 @@ function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://github.com/JAVA46ZimukMisha/React-application/tree/sprint-5_CoursesDataGrid">
+      <Link color="inherit" href="https://github.com/JAVA46ZimukMisha/React-application/tree/split-6_auth_flow">
         Link to github with HW
       </Link>{' '}
       {new Date().getFullYear()}
