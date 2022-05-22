@@ -11,6 +11,7 @@ import ActionConfirmation from "../dialogs/ActionConfirmation";
 import ConfirmationData from "../../models/ConfirmationData";
 import courseData from "../../config/courseData.json";
 import useLayout from "../../util/useLayout";
+import { ClientData } from "../../models/ClientData";
 function getActions(actionsFn: (params: GridRowParams)=>JSX.Element[], layout:string): GridColumns {
     const columns: GridColumns = [
         {field: "id", type: "string", headerName: "ID", align: "center", headerAlign: "center", flex:0.5},
@@ -36,8 +37,8 @@ const style = {
     boxShadow: 24,
     p: 4,
   };
-  
 const Courses: React.FC = () => {
+    const clientData: ClientData = useSelector<StateType, ClientData>(state=>state.clientData);
     const dispatch = useDispatch()
     const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
     const [isEdit, setEdit] = React.useState(false);
@@ -55,7 +56,7 @@ const Courses: React.FC = () => {
              <GridActionsCellItem label="Details" icon={<Visibility/>}
               onClick={showDetails.bind( undefined, params.id as number)}/>
         ]
-        return actionElements;
+        return clientData.isAdmin ? actionElements : actionElements.splice(2);
     }
     function showDetails(id: number) {
         shownCourse.current = courses.find(c => c.id === id);
