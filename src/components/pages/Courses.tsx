@@ -37,9 +37,10 @@ const style = {
     boxShadow: 24,
     p: 4,
   };
+  
 const Courses: React.FC = () => {
-    const clientData: ClientData = useSelector<StateType, ClientData>(state=>state.clientData);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<any>();
+    const clientData = useSelector<StateType, ClientData>(state => state.clientData);
     const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
     const [isEdit, setEdit] = React.useState(false);
     const [flOpen, setFlOpen] = React.useState<boolean>(false);
@@ -50,13 +51,17 @@ const Courses: React.FC = () => {
     const layout = useLayout();
     function actionsFn(params: GridRowParams): JSX.Element[] {
         const actionElements: JSX.Element[] = [
-            <GridActionsCellItem label="Remove" onClick={() => showRemoveConfirmation(params.id as number)}
-             icon={<Delete/>}/>,
-             <GridActionsCellItem label="Edit" onClick={() => editFn(params.id as number)} icon={<Edit/>}/>,
-             <GridActionsCellItem label="Details" icon={<Visibility/>}
-              onClick={showDetails.bind( undefined, params.id as number)}/>
+           <GridActionsCellItem label="Details" icon={<Visibility/>}
+             onClick={showDetails.bind( undefined, params.id as number)}/>
+             
         ]
-        return clientData.isAdmin ? actionElements : actionElements.splice(2);
+        if (clientData.isAdmin) {
+            actionElements.push(<GridActionsCellItem label="Edit" onClick={() => editFn(params.id as number)}
+             icon={<Edit/>}/>,
+             <GridActionsCellItem label="Remove" onClick={() => showRemoveConfirmation(params.id as number)}
+             icon={<Delete/>}/>)
+        }
+        return actionElements;
     }
     function showDetails(id: number) {
         shownCourse.current = courses.find(c => c.id === id);

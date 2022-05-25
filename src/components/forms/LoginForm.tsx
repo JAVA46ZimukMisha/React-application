@@ -1,25 +1,27 @@
-import React from "react";
-import LoginData from "../../models/LoginData";
+import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
+
 import Link from '@mui/material/Link';
+
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import LoginData from '../../models/LoginData';
+import { Alert } from '@mui/material';
 type Props = {
-    submitFn: (loginData: LoginData)=>void;
+    submitFn: (loginData: LoginData)=>boolean
 }
-const LoginForm: React.FC<Props> = ({submitFn}) => {
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://github.com/JAVA46ZimukMisha/React-application/tree/split-6_auth_flow">
-        Link to github with HW
+      <Link color="inherit" href="https://tel-ran.com">
+        Tel-Ran
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -28,10 +30,18 @@ function Copyright(props: any) {
 }
 
 const theme = createTheme();
+
+export default function LoginForm({submitFn}: Props) {
+    const [flAlert, setAlert] = React.useState<boolean>(false);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    submitFn({email: data.get('email') as string, password: data.get('password') as string})
+    const loginData = {email: data.get('email') as string, password: data.get('password') as string}
+    console.log(loginData);
+    if(!submitFn(loginData)) {
+        setAlert(true)
+    }
+    
   };
 
   return (
@@ -40,30 +50,31 @@ const theme = createTheme();
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            mt: {xs: 15, sm: 1, md: 15},
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            {flAlert && <Alert onClose={() => setAlert(false)} severity='error'
+             sx={{width: '50vw', mb: {xs: 5,sm:1,md: 5}}}>Wrong Credentials</Alert>}
+          <Avatar sx={{  bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          
+          <Box component="form" onSubmit={handleSubmit} sx={{mt: {xs: 8, sm: 2, md:10}}} >
             <TextField
-              margin="normal"
+              
               required
               fullWidth
               id="email"
               label="Email Address"
               name="email"
-              autoComplete="email"
+              
               autoFocus
             />
             <TextField
+            sx={{mt: {xs: 5, sm:2, md: 5}}}
               margin="normal"
               required
               fullWidth
@@ -71,21 +82,22 @@ const theme = createTheme();
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
+             
             />
+            
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{mt: {xs: 5, sm:2, md: 5}}}
             >
               Sign In
             </Button>
+           
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Copyright sx={{mt: {xs: 5, sm:2, md: 5}  }} />
       </Container>
     </ThemeProvider>
   );
 }
-export default LoginForm
