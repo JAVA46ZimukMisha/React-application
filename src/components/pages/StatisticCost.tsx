@@ -4,7 +4,7 @@ import _ from "lodash";
 import { StatisticTable } from "../table/StatisticTable";
 const fromToIntervals = [100, 500, 1000, 5000];
 const StatisticCost: React.FC = () => {
-    const [fromTo, setFromTo] = React.useState(100);
+    const [fromTo, setFromTo] = React.useState(fromToIntervals[0]);
     const [flInterval, setflInterval] = React.useState(false);
     function setInterval(event: any) {
         setFromTo(event.target.value)  
