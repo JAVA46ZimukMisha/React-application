@@ -37,7 +37,6 @@ const style = {
     boxShadow: 24,
     p: 4,
   };
-  
 const Courses: React.FC = () => {
     const dispatch = useDispatch<any>();
     const clientData = useSelector<StateType, ClientData>(state => state.clientData);

@@ -1,23 +1,27 @@
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LOGIN_PATH } from "../../config/routes-config";
 import { authService } from "../../config/service-config";
-import { emptyClientData } from "../../models/ClientData";
+import { ClientData, emptyClientData } from "../../models/ClientData";
 import { authAction } from "../../redux/actions";
+import { StateType } from "../../redux/store";
 
 const Logout: React.FC = () =>
 {
+    const clientData = useSelector<StateType, ClientData>(state => state.clientData);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    function onLogout() {
-        if (authService.logout()) {
+    async function onLogout() {
+        if (await authService.logout()) {
             dispatch(authAction(emptyClientData));
             navigate(LOGIN_PATH);
         }
 
     }
-    return <Button onClick={onLogout}>Logout</Button>
+    return <Box>
+    <Button onClick={onLogout}>Logout from {clientData.displayName}</Button>
+    </Box>
 }
 export default Logout;

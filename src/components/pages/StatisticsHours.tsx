@@ -1,17 +1,46 @@
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Typography } from "@mui/material";
 import React from "react";
-import { useSelector } from "react-redux";
-import { coursesService } from "../../config/service-config";
-import { Course } from "../../models/Course";
-import { StateType } from "../../redux/store";
-import { getMinMaxAvgByField } from "../../util/functions";
-const StatisticHours: React.FC = () =>
-{
-    const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
-    const statObj = getMinMaxAvgByField(courses, 'hours');
-    return <div style={{fontSize: "1.5em", display: 'flex', justifyContent: 'space-evenly'}}>
-        <label>min hours = {statObj.min}</label>
-        <label>max hours = {statObj.max}</label>
-        <label>avg hours = {statObj.avg}</label>
-    </div>
+import _ from "lodash";
+import { StatisticTable } from "../table/StatisticTable";
+const fromToIntervals = [10, 20, 50, 100];
+const StatisticHours: React.FC = () => {
+    const [fromTo, setFromTo] = React.useState(10);
+    const [flInterval, setflInterval] = React.useState(false);
+    function setInterval(event: any) {
+        setFromTo(event.target.value)  
+    }
+    function getIntervalItems(items: number[]): React.ReactNode {
+        return items.map(c => <MenuItem value={c} key={c}>{c}</MenuItem>)
+    }
+    function showStatisticForm() {
+        return <Grid item xs={10} sm={5} >
+                <FormControl fullWidth required>
+                    <InputLabel id="interval-select-label">Hours Interval</InputLabel>
+                    <Select
+                        labelId="interval-select-label"
+                        id="demo-simple-select"
+                        label="fromTo"
+                        value={fromTo}
+                        onChange={setInterval}
+                    >
+                        <MenuItem value="">{fromTo}</MenuItem>
+                        {getIntervalItems(fromToIntervals)}
+                    </Select>
+                </FormControl>
+            </Grid>
+    }
+    function whatToShaw() {
+        return flInterval ? <StatisticTable fromTo={fromTo} field={"hours"} tableName={"Courses Hours Statistics"}/> : showStatisticForm()
+    }
+    function showMessage() {
+        return flInterval ? "Do you whant to change interval?" : "show statistic table" 
+    }
+    function setFlag() {
+        setflInterval(!flInterval)
+    }
+    return <div>
+        <Button variant="contained" onClick={setFlag}>{showMessage()}</Button>
+        <Box>{whatToShaw()}</Box>
+        </div>
 }
 export default StatisticHours;

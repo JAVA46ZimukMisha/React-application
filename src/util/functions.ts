@@ -1,4 +1,9 @@
+import _ from "lodash";
+import { useSelector } from "react-redux";
+import { Course } from "../models/Course";
 import { RouteType } from "../models/RouteType";
+import { StateType } from "../redux/store";
+import { getRandomNumber } from "./random";
 
 export function range (minInclusive: number, maxExclusive: number): number[] {
  const res: number[] = [];
@@ -24,4 +29,16 @@ export function getRouteIndex(items: RouteType[], pathname: string): number {
         index = 0;
     }
     return index;
+}
+export function getStatistics(fromTo: number, field: string): any[] {
+    const courses: Course[] = useSelector<StateType, Course[]>(state => state.courses);
+    const objStat =  _.countBy(courses, (e: Course) => {   
+        return field === "cost" ? Math.floor(e.cost/fromTo) : Math.floor(e.hours/fromTo);
+     });
+     return Object.keys(objStat).map(s => {
+         return {id: getRandomNumber(1, 1000000),
+             from: +s * fromTo,
+             to: +s * fromTo + fromTo -1,
+            amount: objStat[s]}
+     })
 }

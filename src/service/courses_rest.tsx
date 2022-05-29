@@ -13,16 +13,20 @@ export default class CoursesServicesRest implements CoursesService {
         return await response.json();
     }
     async update(id: number, course: Course) {
-       await fetch(this.getUrlById(id),{
+        const response = await fetch(this.getUrlById(id),{
            method: 'PUT',
            headers: {
                'Content-Type':'application/json'
            },
            body: JSON.stringify(course)
-       }) 
+       });
+       return await response.json(); 
     }
     async get() {
-        const response = await fetch(this.url);
+        const response = await fetch(this.url, {
+            method: 'GET'
+        });
+        
         return await response.json();
     }
     async remove(id: number) {
