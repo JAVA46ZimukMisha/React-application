@@ -33,13 +33,13 @@ const StatisticCost: React.FC = () => {
         return flInterval ? <StatisticTable fromTo={fromTo} field={"cost"} tableName={"Courses Cost Statistics"}/> : showStatisticForm()
     }
     function showMessage() {
-        return flInterval ? "Do you whant to change interval?" : "show statistic table" 
+        return flInterval ? "Do you whant to change interval?" : "show cost statistic table" 
     }
     function setFlag() {
         setflInterval(!flInterval)
     }
     return <div>
-        <Button variant="contained" onClick={setFlag}>{showMessage()}</Button>
+        <Button variant="contained" onClick={setFlag} sx={{margin: "5vh"}}>{showMessage()}</Button>
         <Box>{whatToShaw()}</Box>
         </div>
 }

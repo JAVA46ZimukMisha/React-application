@@ -24,7 +24,7 @@ return <Box>
  sx={{fontSize: {xs: "1.3em", sm: "1em", md:"2em"}, textAlign: 'center', fontWeight: 'bold'}}>
      {tableName}</Typography>
      <Paper sx={{height: {xs: '90vh', sm: '85vh', md: '80vh'}, width: {xs: '100%', md: '80%'}}}>
-     <DataGrid rows={getStatistics(fromTo, field)} columns={columns} />
+     <DataGrid rows={getStatistics(fromTo, field)} columns={columns} sx={{marginLeft: "10vw"}}/>
 </Paper>
 </Box>
 }
