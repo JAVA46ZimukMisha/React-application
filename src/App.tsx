@@ -11,6 +11,7 @@ import { RouteType } from './models/RouteType';
 import { coursesService } from './config/service-config';
 import { authAction, setCourses, setOperationCode } from './redux/actions';
 import { OperationCode } from './models/OperationCode';
+import { factory } from 'typescript';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -31,15 +32,16 @@ const App: React.FC = () => {
   function operationCodeHandler() {
     if (operationCode == OperationCode.AUTH_ERROR) {
       dispatch(authAction(emptyClientData));
+      setFlAlert(false);
     }
     //TODO
     if(operationCode == OperationCode.SERVER_UNAVAILABLE) {
       setFlAlert(true);
-      setInterval(()=>coursesService.get(), 5000)
+      setInterval(()=>coursesService.get().then(()=>{dispatch(setOperationCode(OperationCode.OK)); setFlAlert(false)}), 5000)
     }
     if(operationCode == OperationCode.UNKNOWN) {
       setFlAlert(true);
-      setInterval(()=>coursesService.get(), 5000)
+      setInterval(()=>coursesService.get().then(()=>{dispatch(setOperationCode(OperationCode.OK)); setFlAlert(false)}), 5000)
     }
   }
   const operationCodeCallback = React.useCallback(operationCodeHandler, [operationCode]);
@@ -70,6 +72,6 @@ function getRoutes(relevantItems: RouteType[], clientData: ClientData): React.Re
 function getRelevantItems(clientData: ClientData, flAlert?: boolean): RouteType[] {
   //TODO for admin
   return ROUTES.filter(r => !flAlert ? (!!clientData.email && r.authenticated ) ||
-   (!clientData.email && !r.authenticated && !r.administrator) || (clientData.isAdmin && r.administrator) : r.flAlert)
+   (!clientData.email && !r.authenticated && !r.administrator && !flAlert) || (clientData.isAdmin && r.administrator) : r.flAlert)
 }
 
