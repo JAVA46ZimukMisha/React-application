@@ -1,3 +1,4 @@
+import { Observable, Subscriber } from "rxjs";
 import { Course } from "../models/Course";
 import { OperationCode } from "../models/OperationCode";
 import { AUTH_TOKEN_ITEM } from "./AuthServiceJwt";
@@ -6,6 +7,7 @@ function getHeaders(): any {
     return {Authorization: "Bearer " + localStorage.getItem(AUTH_TOKEN_ITEM),
 "Content-Type": "application/json"}
 }
+const POLLING_INTERVAL = 20000
 async function responseProcessing(response: Response): Promise<any> {
     if (response.status < 400) {
         return await response.json();
@@ -16,8 +18,40 @@ async function responseProcessing(response: Response): Promise<any> {
     throw OperationCode.UNKNOWN
 }
 export default class CoursesServiceRest implements CoursesService {
+    private observable: Observable<Course[] | OperationCode> | undefined;
+    private observer: Subscriber<Course[] | OperationCode> | undefined;
     constructor(private url: string){
         console.log(url)
+    }
+    private coursesOldState: Course[] = []; 
+    private observing() {
+        this.get().then(courses => (JSON.stringify(this.coursesOldState) !== JSON.stringify(courses)) && this.newCoursesNext(courses))
+        .catch(err => {
+            if (err == OperationCode.UNKNOWN){
+                this.observer?.next(OperationCode.UNKNOWN)
+                this.observer?.complete();
+            } else {
+                this.observer?.next(err)
+            }
+            
+        })
+    }
+    newCoursesNext(courses: Course[]): void {
+        this.observer?.next(courses);
+        console.log(`If you see this message, the courses ${JSON.stringify(this.coursesOldState)} were changed to ${JSON.stringify(courses)}`)
+        this.coursesOldState = courses;
+    }
+    getObservableData () : Observable<Course[] | OperationCode> {
+        if (!this.observable || this.observer!.closed) {
+            this.observable = new Observable(observer => {
+                let intervalId:any;
+                this.observer = observer;
+                this.observing();
+                intervalId = setInterval(this.observing.bind(this), POLLING_INTERVAL);
+                return () => clearInterval(intervalId)
+            })
+        }
+        return this.observable;
     }
     async add(course: Course): Promise<void> {
         (course as any).userId = 1;
