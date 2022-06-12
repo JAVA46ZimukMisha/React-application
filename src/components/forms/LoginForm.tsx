@@ -3,6 +3,10 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import GoogleIcon from '@mui/icons-material/Google';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 
 import Link from '@mui/material/Link';
 
@@ -13,6 +17,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginData from '../../models/LoginData';
 import { Alert } from '@mui/material';
+import { authService } from '../../config/service-config';
 type Props = {
     submitFn: (loginData: LoginData)=>Promise<boolean>
 }
@@ -33,6 +38,19 @@ const theme = createTheme();
 
 export default function LoginForm({submitFn}: Props) {
     const [flAlert, setAlert] = React.useState<boolean>(false);
+    const [isEmail, setEmail] = React.useState<boolean>(false);
+    const [isGoogle, setGoogle] = React.useState<boolean>(false);
+    const [isFacebook, setFacebook] = React.useState<boolean>(false);
+    const [isGitHub, setGitHub] = React.useState<boolean>(false);
+    const allFalse = ()=>{
+        setEmail(false);
+        setGoogle(false);
+        setFacebook(false);
+        setGitHub(false);
+    }
+    const setColor = (isIcon: boolean): "inherit" | "action" => {
+      return isIcon ? "inherit" : "action"
+    }
   const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -91,10 +109,16 @@ export default function LoginForm({submitFn}: Props) {
               variant="contained"
               sx={{mt: {xs: 5, sm:2, md: 5}}}
             >
-              Sign In
+              Sign In 
             </Button>
            
           </Box>
+        </Box>
+        <Box sx={{display: 'flex', justifyContent: 'center', alignItems:'center'}}>
+          <Button onClick={()=> {authService.whichService = "facebook"; allFalse(); setFacebook(true)}}><FacebookIcon color={setColor(isFacebook)}></FacebookIcon></Button>
+          <Button onClick={()=> {authService.whichService = "google"; allFalse(); setGoogle(true)}}><GoogleIcon color={setColor(isGoogle)}></GoogleIcon></Button>
+          <Button onClick={()=> {authService.whichService = "git"; allFalse(); setGitHub(true)}}><GitHubIcon color={setColor(isGitHub)}></GitHubIcon></Button>
+          <Button onClick={()=> {authService.whichService = "email"; allFalse(); setEmail(true)}}><AlternateEmailIcon color={setColor(isEmail)}></AlternateEmailIcon></Button>
         </Box>
         <Copyright sx={{mt: {xs: 5, sm:2, md: 5}  }} />
       </Container>
